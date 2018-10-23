@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: 'Simple inventory API to demonstrate automation'
+
+Resources:
+  GetInventoryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetInventoryLambda
+      Handler: get_inventory.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      MemorySize: 128
+      CodeUri: src/
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName:
+              !Ref InventoryStore
+      Environment:
+        Variables:
+          TABLE_NAME: InventoryStore
+      Events:
+        ApiRequest:
+          Type: Api
+          Properties:
+            Path: /inventory
+            Method: GET   
+  PutInventoryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: PutInventoryLambda
+      Handler: put_inventory.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      MemorySize: 128
+      CodeUri: src/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName:
+              !Ref InventoryStore
+      Environment:
+        Variables:
+          TABLE_NAME: InventoryStore
+      Events:
+        ApiRequest:
+          Type: Api
+          Properties:
+            Path: /inventory
+            Method: PUT
+  InventoryStore:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: InventoryStore
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  DynamoDB:
+    Description: "This is the dynamo table we created"
+    Value: !Ref InventoryStore
