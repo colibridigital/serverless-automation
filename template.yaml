@@ -15,7 +15,7 @@ Resources:
 
       AutoPublishAlias: live
       DeploymentPreference:
-        Type: Canary10Percent5Minutes
+        Type: Canary10Percent15Minutes
 
       Policies:
         - DynamoDBReadPolicy:
