@@ -12,6 +12,11 @@ Resources:
       Timeout: 30
       MemorySize: 128
       CodeUri: src/
+
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Canary10Percent5Minutes
+
       Policies:
         - DynamoDBReadPolicy:
             TableName:
@@ -60,6 +65,23 @@ Resources:
       ProvisionedThroughput: 
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+  
+  AliasErrorMetricGreaterThanZeroAlarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      AlarmDescription: Lambda Function Error > 0
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: Resource
+          Value: !Sub "${GetInventoryLambda}:live"
+        - Name: FunctionName
+          Value: !Ref GetInventoryLambda
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 0
 
 Outputs:
   DynamoDB:
