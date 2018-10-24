@@ -27,7 +27,8 @@ exports.handler = (event, context, callback) => {
       statusCode: 200,
       body: JSON.stringify(
         {
-          'Results': data.Items
+          'Results': data.Items,
+          'API Version': "v1.0"
         }
       ),
     };
