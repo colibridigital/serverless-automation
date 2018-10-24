@@ -2,8 +2,8 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm install time
-      - sam package --template-file template.yaml --s3-bucket colibri-digital-sam-bucket --output-template-file packaged.yaml
+      - npm install
+      - aws cloudformation package --template-file template.yaml --s3-bucket colibri-digital-sam-bucket --output-template-file packaged.yaml
 artifacts:
   type: zip
   files:
