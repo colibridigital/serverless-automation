@@ -87,3 +87,6 @@ Outputs:
   DynamoDB:
     Description: "This is the dynamo table we created"
     Value: !Ref InventoryStore
+  Endpoint:
+    Description: "The API Gateway endpoint for invoking the API"
+    Value: !Sub 'https://${ServerlessRestAPI}.execute-api.$AWS::Region}.amazonaws.com'
